@@ -1,30 +1,28 @@
 import { defaultSimulationConfig, validateSimulationConfig } from '../../src/config/simulation-config';
 import { categorizeJobMessages, findFreePort } from '../../src/utils/helpers';
 import { ProcessManager } from '../../src/utils/process-manager';
-import { JobMessage, WorkRequest } from '@keep3r-network/cli-utils';
+import { JobMessage, WorkRequest } from '@jolt-network/cli-utils';
 import fs from 'fs-extra';
 import { concatMap, Observable } from 'rxjs';
 import { SimulationConfig } from 'src/config/simulation-config.d';
 
 const testConfig: Partial<SimulationConfig> = {
-	chainId: 5,
-	keep3r: '0x3364BF0a8DcB15E463E6659175c90A57ee3d4288',
-	keep3rV1: '0x3364BF0a8DcB15E463E6659175c90A57ee3d4288',
-	keep3rHelper: '0xF3043424E22C0b3204C1458546271b13c513b62f',
-	keeper: '0x3223C2ad76f62f4115dADDf07749F83AFc41f4a1',
+	chainId: 4,
+	bonder: '0x35303c76eE37A0a3f9031E0E9D3B3E7214ed9C4f',
+	worker: '0xb4124ceb3451635dacedd11767f004d8a28c6ee7',
 
 	jobDefaults: {
-		futureBlocks: 3,
+		futureBlocks: 0,
 		bundleBurst: 1,
 		timeToAdvance: 30,
 		priorityFee: 10,
 	},
 };
 
-const jsonFilePath = `.config.test.goerli.json`;
+const jsonFilePath = `.config.test.rinkeby.json`;
 
-export async function testGoerliBlock(jobPath: string, blockNumber: number): Promise<Observable<WorkRequest>> {
-	const envConfig = process.env.ALCHEMYKEY ? { localRpc: `https://eth-goerli.alchemyapi.io/v2/${process.env.ALCHEMYKEY}` } : {};
+export async function testRinkebyBlock(jobPath: string, blockNumber: number): Promise<Observable<WorkRequest>> {
+	const envConfig = process.env.ALCHEMYKEY ? { localRpc: `https://eth-rinkeby.alchemyapi.io/v2/${process.env.ALCHEMYKEY}` } : {};
 	const jsonConfig = fs.existsSync(jsonFilePath) ? await fs.readJSON(jsonFilePath) : {};
 
 	const config = validateSimulationConfig({
@@ -45,7 +43,7 @@ export async function testGoerliBlock(jobPath: string, blockNumber: number): Pro
 		`./dist/tsc/src/job-wrapper ` +
 			`--job ${jobPath} ` +
 			`--block ${blockNumber} ` +
-			`--keeper ${config.keeper} ` +
+			`--worker ${config.worker} ` +
 			`--config ${JSON.stringify(config)} ` +
 			`--ahead-amount ${config.jobDefaults.futureBlocks} ` +
 			`--bundle-burst ${config.jobDefaults.bundleBurst} ` +

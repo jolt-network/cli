@@ -1,8 +1,15 @@
 import { loadConfig } from './config/config';
 import { loadSecrets } from './config/secrets';
-import { initializeKeeper } from './scripts/initialize-keeper';
+import { initializeWorker } from './scripts/initialize-worker';
 import { Flashbots } from './utils/flashbots';
-import { doWork, getNewBlocks, populateJobConfig, retryWorkAndSendTx, sendTxs } from './utils/helpers';
+import {
+	doWork,
+	getNewBlocks,
+	populateJobConfig,
+	retryWorkAndSendTx,
+	sendTxsToFlashbots,
+	sendTxsToNetwork,
+} from './utils/helpers';
 import { getJobMetadata } from './utils/io';
 import { setupLogger } from './utils/loggers';
 import { ProcessManager } from './utils/process-manager';
@@ -22,16 +29,18 @@ import { hideBin } from 'yargs/helpers';
 
 	setupLogger(global.config.logs);
 
-	const keeper = await initializeKeeper();
-	if (!keeper) process.exit();
+	const worker = await initializeWorker();
+	if (!worker) process.exit();
 
 	const block$ = getNewBlocks(localProvider);
 
 	const processManager = new ProcessManager();
 	const flashbots = await Flashbots.init(
-		new Wallet(global.secrets.keeperPrivateKey),
+		new Wallet(global.secrets.joltPrivateKey),
 		new Wallet(global.secrets.bundleSignerPrivateKey)
 	);
+	const txProvider = new providers.JsonRpcProvider({ url: global.config.txRpc }, global.config.chainId);
+	const txSigner = new Wallet(global.secrets.joltPrivateKey, txProvider);
 
 	const idsInProgress: Record<string, boolean> = {};
 
@@ -52,17 +61,20 @@ import { hideBin } from 'yargs/helpers';
 						job.config.futureBlocks,
 						job.config.bundleBurst,
 						processManager,
-						keeper,
+						worker,
 						Object.keys(idsInProgress)
 					)
 				),
 				tap(({ correlationId }) => (idsInProgress[correlationId] = true)),
-				mergeMap((workRequest) =>
-					sendTxs(workRequest, flashbots).then((result) => ({
+				mergeMap((workRequest) => {
+					let promise;
+					if (global.config.chainId === 1) promise = sendTxsToFlashbots(workRequest, flashbots);
+					else promise = sendTxsToNetwork(workRequest, txProvider, txSigner);
+					return promise.then((result) => ({
 						workRequest,
 						result,
-					}))
-				),
+					}));
+				}),
 				mergeMap(({ result, workRequest }) => {
 					if (result) {
 						delete idsInProgress[workRequest.correlationId];
@@ -77,8 +89,10 @@ import { hideBin } from 'yargs/helpers';
 							workRequest.correlationId,
 							Object.keys(idsInProgress),
 							processManager,
-							keeper,
+							worker,
 							flashbots,
+							txProvider,
+							txSigner,
 							localProvider
 						);
 

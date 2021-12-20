@@ -1,7 +1,7 @@
 import { Config, JobConfig } from './config/config.d';
 import { Secrets } from './config/secrets.d';
 import { JobMetadata } from './utils/io.d';
-import { GanacheFork, AvailablePort } from '@keep3r-network/cli-utils';
+import { GanacheFork, AvailablePort } from '@jolt-network/cli-utils';
 import { ChildProcess } from 'child_process';
 import { BigNumber, ethers } from 'ethers';
 import { Observable } from 'rxjs';
@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 export interface ProcessArguments {
 	block: number;
 	job: string;
-	keeper: string;
+	worker: string;
 	config: string;
 }
 
@@ -23,7 +23,7 @@ export interface JobInitialConsts {
 	config: Config;
 	provider: ethers.providers.JsonRpcProvider;
 	block: ethers.providers.Block;
-	keeper: string;
+	worker: string;
 	nonce: number;
 	fork: GanacheFork;
 	maxFeePerGas: BigNumber;

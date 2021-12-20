@@ -6,7 +6,7 @@ import {
 	FlashbotsBundleResolution,
 	SimulationResponse,
 } from '@flashbots/ethers-provider-bundle';
-import { prelog } from '@keep3r-network/cli-utils';
+import { prelog } from '@jolt-network/cli-utils';
 import { providers } from 'ethers';
 
 export class Flashbots {

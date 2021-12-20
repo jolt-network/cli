@@ -10,9 +10,7 @@ export interface BasicConfig {
 	chainId: number;
 	forkStartPort: number;
 	forkMaxPorts: number;
-	keep3r: string;
-	keep3rV1: string;
-	keep3rHelper: string;
+	bonder: string;
 	logs?: ConfigLogs;
 	topMaxFeePerGas?: string;
 	jobDefaults: JobDefaults;

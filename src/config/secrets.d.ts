@@ -1,4 +1,4 @@
 export interface Secrets {
-	keeperPrivateKey: string;
+	joltPrivateKey: string;
 	bundleSignerPrivateKey: string;
 }

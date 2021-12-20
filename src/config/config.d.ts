@@ -12,7 +12,7 @@ export interface Config extends BasicConfig {
 	txRpc: string;
 	gasLimit: string;
 	recommendedGasPriceIndex: number;
-	inquireKeeperAddress: boolean;
+	inquireWorkerAddress: boolean;
 	initializationGasLimit: number;
 	flashbotRelays: string[];
 	simulateBundle: boolean;

@@ -3,7 +3,7 @@ import { categorizeJobMessages, findFreePort } from './utils/helpers';
 import { getJobMetadata } from './utils/io';
 import { setupLogger } from './utils/loggers';
 import { ProcessManager } from './utils/process-manager';
-import { JobMessage } from '@keep3r-network/cli-utils';
+import { JobMessage } from '@jolt-network/cli-utils';
 import { concatMap } from 'rxjs';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
@@ -17,11 +17,11 @@ import { hideBin } from 'yargs/helpers';
 	const jobMetadata = await getJobMetadata(jobPath);
 	const processManager = new ProcessManager();
 
-	console.log(`Beginning test`, { blockNumber, jobName: jobMetadata.name, keeper: config.keeper });
+	console.log(`Beginning test`, { blockNumber, jobName: jobMetadata.name, worker: config.worker });
 
 	const jobMessage$ = processManager.run<JobMessage>(
 		jobPath,
-		`./src/job-wrapper.ts --job ${jobPath} --block ${blockNumber} --keeper ${config.keeper} --config ${JSON.stringify(
+		`./src/job-wrapper.ts --job ${jobPath} --block ${blockNumber} --worker ${config.worker} --config ${JSON.stringify(
 			config
 		)} --ahead-amount ${config.jobDefaults.futureBlocks} --bundle-burst ${config.jobDefaults.bundleBurst} --time-to-advance ${
 			config.jobDefaults.timeToAdvance

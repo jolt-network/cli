@@ -1,23 +1,13 @@
-import { JobDefaults } from './basic-config';
 import { SimulationConfig } from './simulation-config.d';
 import validate from './simulation-config.d.validator';
 import fs from 'fs-extra';
-
-const defaultJobDefaults: JobDefaults = {
-	futureBlocks: 1,
-	bundleBurst: 6,
-	timeToAdvance: 120,
-	priorityFee: 2,
-};
 
 export const defaultSimulationConfig: Partial<SimulationConfig> = {
 	localRpc: 'http://127.0.0.1:8545',
 	forkStartPort: 10000,
 	forkMaxPorts: 100,
-	keep3rHelper: '0xcb12Ac8649eA06Cbb15e29032163938D5F86D8ad',
-	keep3rV1: '0x1cEB5cB57C4D4E2b2433641b95Dd330A33185A44',
-	keep3r: '0x1cEB5cB57C4D4E2b2433641b95Dd330A33185A44',
-	chainId: 1,
+	bonder: '0x35303c76eE37A0a3f9031E0E9D3B3E7214ed9C4f',
+	chainId: 4,
 };
 
 export async function loadSimulationConfig(filePath: string): Promise<SimulationConfig> {
@@ -27,7 +17,10 @@ export async function loadSimulationConfig(filePath: string): Promise<Simulation
 		...defaultSimulationConfig,
 		...userConfig,
 		jobDefaults: {
-			...defaultJobDefaults,
+			futureBlocks: 0,
+			bundleBurst: userConfig.chainId === 1 ? 6 : 1,
+			timeToAdvance: userConfig.chainId === 1 ? 60 : 0,
+			priorityFee: 2,
 			...userConfig.jobDefaults,
 		},
 	});

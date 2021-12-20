@@ -14,7 +14,7 @@ import {
 	JobBurst,
 	JobWorkableGroup,
 	advanceToTimeAndBlock,
-} from '@keep3r-network/cli-utils';
+} from '@jolt-network/cli-utils';
 import { BigNumber, providers, PopulatedTransaction } from 'ethers';
 import path from 'path';
 import { concatMap, filter, map, Subject, tap } from 'rxjs';
@@ -27,7 +27,7 @@ const {
 	bundleBurst,
 	config,
 	aheadAmount,
-	keeper: keeperAddress,
+	worker: workerAddress,
 	retryId,
 	skipIds,
 	timeToAdvance,
@@ -73,7 +73,7 @@ let logMetadata: { job: string };
 			port: await getAvailablePort(coreMessage$),
 			fork_block_number: block.number,
 			gasLimit: block.gasLimit.toHexString(),
-			unlocked_accounts: [keeperAddress],
+			unlocked_accounts: [workerAddress],
 			gasPrice: BigNumber.from(0).toHexString(),
 		},
 		config.chainId
@@ -89,10 +89,10 @@ let logMetadata: { job: string };
 		timeToAdvance,
 		targetBlock,
 		bundleBurst,
-		keeperAddress,
+		workerAddress,
 		rpcUrl: config.localRpc,
 		coreMessage$,
-		keeperNonce: await localProvider.getTransactionCount(keeperAddress, blockNumber),
+		workerNonce: await localProvider.getTransactionCount(workerAddress, blockNumber),
 		fork,
 		aheadAmount,
 		block$,
@@ -174,10 +174,10 @@ export function getProcessArguments() {
 				demandOption: true,
 				description: 'Job name',
 			},
-			keeper: {
+			worker: {
 				type: 'string',
 				demandOption: true,
-				description: 'Keeper address',
+				description: 'Worker address',
 			},
 			config: {
 				type: 'string',

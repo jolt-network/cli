@@ -2,11 +2,11 @@ import { ChildProcessMessage, JobObject } from '../types';
 import { Flashbots } from './flashbots';
 import { ProcessManager } from './process-manager';
 import { Block } from '@ethersproject/abstract-provider';
-import { JobMessage, PortRequest, WorkRequest } from '@keep3r-network/cli-utils';
+import { JobMessage, PortRequest, WorkRequest } from '@jolt-network/cli-utils';
 import { BigNumber, providers, Wallet, utils } from 'ethers';
 import moment from 'moment';
 import portfinder from 'portfinder';
-import { concatMap, from, mergeMap, Observable, of, Subject, tap, toArray } from 'rxjs';
+import { concatMap, from, mergeMap, Observable, of, Subject, tap } from 'rxjs';
 import { filter, map, share } from 'rxjs/operators';
 import { JobConfig } from 'src/config/config.d';
 import { Config } from 'src/config/config.d';
@@ -20,7 +20,7 @@ export function doWork(
 	aheadAmount: number,
 	bundleBurst: number,
 	processManager: ProcessManager,
-	keeper: string,
+	worker: string,
 	skipIds: string[],
 	correlationId?: string
 ): Observable<WorkRequest> {
@@ -35,7 +35,7 @@ export function doWork(
 			`--priority-fee ${priorityFee} ` +
 			`--ahead-amount ${aheadAmount} ` +
 			`--bundle-burst ${bundleBurst} ` +
-			`--keeper ${keeper} ` +
+			`--worker ${worker} ` +
 			`--config ${JSON.stringify(global.config)} ` +
 			skipIds.map((skipId) => `--skipId ${skipId}`).join(' ') +
 			' ' +
@@ -72,16 +72,22 @@ export function retryWorkAndSendTx(
 	correlationId: string,
 	skipIds: string[],
 	processManager: ProcessManager,
-	keeper: string,
+	worker: string,
 	flashbots: Flashbots,
+	txProvider: providers.JsonRpcProvider,
+	txSigner: Wallet,
 	localProvider: providers.JsonRpcProvider
 ): Observable<boolean> {
 	return from(localProvider.getBlockNumber()).pipe(
 		tap((forkBlock) => console.log(`Retrying work for ${job.metadata.name} forking block ${forkBlock}`)),
 		concatMap((forkBlock) =>
-			doWork(job, forkBlock, timeToAdvance, priorityFee, aheadAmount, bundleBurst, processManager, keeper, skipIds, correlationId)
+			doWork(job, forkBlock, timeToAdvance, priorityFee, aheadAmount, bundleBurst, processManager, worker, skipIds, correlationId)
 		),
-		mergeMap((workRequests) => sendTxs(workRequests, flashbots)),
+		mergeMap((workRequests) =>
+			global.config.chainId === 1
+				? sendTxsToFlashbots(workRequests, flashbots)
+				: sendTxsToNetwork(workRequests, txProvider, txSigner)
+		),
 		mergeMap(
 			(result: boolean): Observable<boolean> =>
 				result
@@ -95,15 +101,17 @@ export function retryWorkAndSendTx(
 							correlationId,
 							skipIds,
 							processManager,
-							keeper,
+							worker,
 							flashbots,
+							txProvider,
+							txSigner,
 							localProvider
 					  )
 		)
 	);
 }
 
-export function sendTxs(workRequest: WorkRequest, flashbots: Flashbots): Promise<boolean> {
+export function sendTxsToFlashbots(workRequest: WorkRequest, flashbots: Flashbots): Promise<boolean> {
 	console.log('Sending txs', workRequest);
 	if (workRequest.burst.length === 0) return Promise.resolve(true);
 
@@ -112,6 +120,23 @@ export function sendTxs(workRequest: WorkRequest, flashbots: Flashbots): Promise
 	});
 
 	return included[0];
+}
+
+export async function sendTxsToNetwork(
+	workRequest: WorkRequest,
+	provider: providers.JsonRpcProvider,
+	signer: Wallet
+): Promise<boolean> {
+	console.log('Sending txs', workRequest);
+	if (workRequest.burst.length === 0) return Promise.resolve(true);
+	const signedTx = await signer.signTransaction(workRequest.burst[0].unsignedTxs[0]);
+	try {
+		const txResponse = await provider.sendTransaction(signedTx);
+		await txResponse.wait();
+	} catch (error) {
+		console.error('Transaction failed', error);
+	}
+	return true;
 }
 
 export function getAddressFromPrivateKey(pk: string): string {
