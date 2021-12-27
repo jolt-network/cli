@@ -19,7 +19,7 @@ describe('jolt-eth-price-oracle', () => {
 								{
 									chainId: 4,
 									data: '0x4a6ee1b100000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000',
-									from: '0xb4124ceb3451635dacedd11767f004d8a28c6ee7',
+									from: '0x5B6DF8e106ba70E65F92531dfB09FE196D32EaEb',
 									gasLimit: {
 										hex: '0x1e8480',
 										type: 'BigNumber',

@@ -8,8 +8,8 @@ import { SimulationConfig } from 'src/config/simulation-config.d';
 
 const testConfig: Partial<SimulationConfig> = {
 	chainId: 4,
-	bonder: '0x35303c76eE37A0a3f9031E0E9D3B3E7214ed9C4f',
-	worker: '0xb4124ceb3451635dacedd11767f004d8a28c6ee7',
+	bonder: '0x0e1eC4802F730e69481742a6d41e3B6B5a6a1d08',
+	worker: '0x5B6DF8e106ba70E65F92531dfB09FE196D32EaEb',
 
 	jobDefaults: {
 		futureBlocks: 0,
