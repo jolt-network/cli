@@ -1134,18 +1134,18 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
-"@jolt-network/cli-jobs@^0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@jolt-network/cli-jobs/-/cli-jobs-0.1.3.tgz#ffa29c3e0c2c6ddd088fa551f01a3c07e9127a03"
-  integrity sha512-yPI26dkOWY/DlRSHNKyGVwo20MVVvBim65kknJRilUXzrqkVz/BACk8bYl87/7Ql33FpWglB58vBfEEmalZ16A==
+"@jolt-network/cli-jobs@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@jolt-network/cli-jobs/-/cli-jobs-0.1.5.tgz#facb39248d41e94c9b7029446c4d8036ff8cef6f"
+  integrity sha512-zha5bId6mAHUsh+hL+nBBgyNg9H5XAzfXaQ+4QlnZrGIKlW72LpHSbtkOyeFoFv3EhX0nFEj920BTygIdsTS2w==
   dependencies:
-    "@jolt-network/cli-utils" "^0.1.2"
+    "@jolt-network/cli-utils" "^0.1.4"
     ethers "5.5.1"
 
-"@jolt-network/cli-utils@^0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@jolt-network/cli-utils/-/cli-utils-0.1.2.tgz#0b8e4775f28a30a53078900c944744d2f7158f32"
-  integrity sha512-PYlBOzcj2tqCIvx2QrxwM6dujGlY2/e5xgO4eJEwelX+zGCskuBGF58kQ8LH2hn8stDnu9IbJPUUS1FJKT6tyQ==
+"@jolt-network/cli-utils@^0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@jolt-network/cli-utils/-/cli-utils-0.1.4.tgz#c6ae77187a1abfab1ba4633f2309fcd5d88df396"
+  integrity sha512-ihC+stnIlKUYh7FyRe5s87YyAtCfHNA99j/GDy42WqkZPF/ZPnVQMaW9W/CjrAiL+iRRqeXCdDbqC02/iHMsGA==
   dependencies:
     "@ethersproject/abstract-provider" "5.5.1"
     bigint-buffer "1.1.5"
