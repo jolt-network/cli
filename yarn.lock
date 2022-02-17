@@ -1134,10 +1134,10 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
-"@jolt-network/cli-jobs@^0.1.5":
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/@jolt-network/cli-jobs/-/cli-jobs-0.1.5.tgz#facb39248d41e94c9b7029446c4d8036ff8cef6f"
-  integrity sha512-zha5bId6mAHUsh+hL+nBBgyNg9H5XAzfXaQ+4QlnZrGIKlW72LpHSbtkOyeFoFv3EhX0nFEj920BTygIdsTS2w==
+"@jolt-network/cli-jobs@^0.1.6":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@jolt-network/cli-jobs/-/cli-jobs-0.1.6.tgz#c2358ca88b811c33c03ad2db8e0617c861a03fd4"
+  integrity sha512-yUdD+p+bFaQBL57mD816U+JGR9O8esAM2SCxbHJ+QZdxTjRS501+QWzwVg6lynGMo1PG9xOapP4OIRLlmmuizg==
   dependencies:
     "@jolt-network/cli-utils" "^0.1.4"
     ethers "5.5.1"

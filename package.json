@@ -68,7 +68,7 @@
   },
   "dependencies": {
     "@flashbots/ethers-provider-bundle": "0.4.2",
-    "@jolt-network/cli-jobs": "^0.1.5",
+    "@jolt-network/cli-jobs": "^0.1.6",
     "@jolt-network/cli-utils": "^0.1.4",
     "@types/dotenv": "8.2.0",
     "@types/inquirer": "8.1.3",
