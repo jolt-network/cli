@@ -6,7 +6,7 @@ export const defaultSimulationConfig: Partial<SimulationConfig> = {
 	localRpc: 'http://127.0.0.1:8545',
 	forkStartPort: 10000,
 	forkMaxPorts: 100,
-	bonder: '0x0e1eC4802F730e69481742a6d41e3B6B5a6a1d08',
+	bonder: '0x60248D9447899235FA47103964383502f89cFd5B',
 	chainId: 4,
 };
 
